@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="seaglass-demo">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/seaglass-demo.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/src/seaglass-demo.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>
