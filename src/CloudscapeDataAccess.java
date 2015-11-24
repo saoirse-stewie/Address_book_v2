@@ -5,8 +5,7 @@
 // Java core packages
 import java.sql.*;
 
-public class CloudscapeDataAccess 
-   implements AddressBookDataAccess {
+public class CloudscapeDataAccess implements AddressBookDataAccess {
       
    // reference to database connection
    private Connection connection;
@@ -32,8 +31,34 @@ public class CloudscapeDataAccess
    // references to prepared statements for updating entry
    private PreparedStatement sqlDeleteName;
    private PreparedStatement sqlDeleteAddress;
-   private PreparedStatement sqlDeletePhone;
-   private PreparedStatement sqlDeleteEmail;
+
+    private PreparedStatement sqlupdateSpecificAddress;
+    private PreparedStatement sqlupdateSpecificAddress2;
+    private PreparedStatement sqlupdateSpecificAddress3;
+    private PreparedStatement sqlupdateSpecificCounty;
+    private PreparedStatement sqlupdateSpecificCity;
+    private PreparedStatement sqlupdateSpecificemailAddress;
+    private PreparedStatement sqlupdateSpecificPhone;
+
+    private PreparedStatement sqlDeleteSpecificAddress;
+    private PreparedStatement sqlDeleteSpecificAddress2;
+    private PreparedStatement sqlDeleteSpecificAddress3;
+    private PreparedStatement sqlDeleteSpecificCounty;
+    private PreparedStatement sqlDeleteSpecificCity;
+    private PreparedStatement sqlDeleteSpecificemailAddress;
+    private PreparedStatement sqlDeleteSpecificPhone;
+
+    private PreparedStatement sqlInsertSpecificAddress;
+    private PreparedStatement sqlInsertSpecificAddress2;
+    private PreparedStatement sqlInsertSpecificAddress3;
+    private PreparedStatement sqlInsertSpecificCounty;
+    private PreparedStatement sqlInsertSpecificCity;
+    private PreparedStatement sqlInsertSpecificemailAddress;
+    private PreparedStatement sqlInsertSpecificPhone;
+
+    private PreparedStatement sqlDeletePhone;
+    private PreparedStatement sqlDeleteEmail;
+
 
    // set up PreparedStatements to access database
    public CloudscapeDataAccess() throws Exception
@@ -42,17 +67,20 @@ public class CloudscapeDataAccess
       connect();
 
       // locate person
-      sqlFind = connection.prepareStatement(
-         "SELECT names.personID, firstName, lastName, " +
-            "addressID, address1, address2, city, county, " +
-            " phoneID, phoneNumber, emailID, " +
-            "emailAddress " +
-         "FROM names, addresses, phoneNumbers, emailAddresses " +
-         "WHERE lastName = ? AND " +
-            "names.personID = addresses.personID AND " +
-            "names.personID = phoneNumbers.personID AND " +
-            "names.personID = emailAddresses.personID" );
-      
+       sqlFind = connection.prepareStatement(
+        "SELECT names.personID, firstName, lastName, " +
+          "addressID, address1, address2, city, county, address3, " + " phoneID, phoneNumber, emailID, " +
+           "emailAddress " + "FROM names, addresses, phoneNumbers, emailAddresses " +
+       "WHERE lastName = ? AND " +
+           "names.personID = addresses.personID AND " +
+         "names.personID = phoneNumbers.personID AND " +
+          "names.personID = emailAddresses.personID" );
+
+     //  sqlFind = connection.prepareStatement(
+       //        "select lastName , count(*) c from names group by lastName = ? " +
+              //         "having  c > 1");
+//
+
       // Obtain personID for last person inserted in database.
       // [This is a Cloudscape-specific database operation.]
       //sqlPersonID = connection.prepareStatement(
@@ -69,11 +97,15 @@ public class CloudscapeDataAccess
          "INSERT INTO names ( firstName, lastName ) " +
          "VALUES ( ? , ? )" );
 
-      // insert address in table addresses
-      sqlInsertAddress = connection.prepareStatement(
-         "INSERT INTO addresses ( personID, address1, " +
-            "address2, city, county ) " +
-         "VALUES ( ? , ? , ? , ? , ?  )" );
+
+      //insert address in table addresses
+      sqlInsertAddress = connection.prepareStatement
+           ("INSERT INTO addresses ( personID, address1, " +
+            "address2, city, county , address3 ) " +
+        "VALUES ( ? , ? , ?, ? , ? , ? )" );
+
+
+     // sqlInsertAddress.executeUpdate();
 
       // insert phone number in table phoneNumbers
       sqlInsertPhone = connection.prepareStatement(
@@ -95,7 +127,7 @@ public class CloudscapeDataAccess
       // update address in table addresses
       sqlUpdateAddress = connection.prepareStatement(
          "UPDATE addresses SET address1 = ?, address2 = ?, " +
-            "city = ?, county = ? " +
+            "city = ?, county = ? , address3 = ? " +
          "WHERE addressID = ?" );
 
       // update phone number in table phoneNumbers
@@ -118,7 +150,69 @@ public class CloudscapeDataAccess
       sqlDeleteAddress = connection.prepareStatement(
          "DELETE FROM addresses WHERE personID = ?" );
 
-      // delete phone number from table phoneNumbers
+       sqlDeleteSpecificAddress =connection.prepareStatement(
+               "update addresses set address1 = null WHERE address1 = ?" );
+       sqlDeleteSpecificAddress2 =connection.prepareStatement(
+               "update addresses set address2 = null WHERE address2 = ?" );
+       sqlDeleteSpecificAddress3 =connection.prepareStatement(
+               "update addresses set address3 = null WHERE address3 = ?" );
+       sqlDeleteSpecificCity =connection.prepareStatement(
+               "update addresses set city = null WHERE city = ?" );
+       sqlDeleteSpecificemailAddress = connection.prepareStatement(
+               "update emailAddresses set emailAddress = null WHERE emailAddress = ?" );
+       sqlDeleteSpecificCounty = connection.prepareStatement(
+               "update addresses set county = null WHERE county = ?" );
+       sqlDeleteSpecificPhone = connection.prepareStatement(
+               "update phonenumbers set phoneNumber = null WHERE phoneNumber = ?" );
+
+       sqlupdateSpecificAddress =connection.prepareStatement(
+               "update addresses set address1 = ? WHERE address1 = ?" );
+       sqlupdateSpecificAddress2 =connection.prepareStatement(
+               "update addresses set address2 = ? WHERE address2 = ?" );
+       sqlupdateSpecificAddress3 =connection.prepareStatement(
+               "update addresses set address3 = ? WHERE address3 = ?" );
+       sqlupdateSpecificCity =connection.prepareStatement(
+               "update addresses set city = ? WHERE city = ?" );
+       sqlupdateSpecificemailAddress = connection.prepareStatement(
+               "update emailAddresses set emailAddress = ? WHERE emailAddress = ?" );
+       sqlupdateSpecificCounty = connection.prepareStatement(
+               "update addresses set county = ? WHERE county = ?" );
+       sqlupdateSpecificPhone = connection.prepareStatement(
+               "update phonenumbers set phoneNumber = ? WHERE phoneNumber = ?" );
+
+       sqlupdateSpecificAddress =connection.prepareStatement(
+               "update addresses set address1 = ? WHERE address1 = ?" );
+       sqlupdateSpecificAddress2 =connection.prepareStatement(
+               "update addresses set address2 = ? WHERE address2 = ?" );
+       sqlupdateSpecificAddress3 =connection.prepareStatement(
+               "update addresses set address3 = ? WHERE address3 = ?" );
+       sqlupdateSpecificCity =connection.prepareStatement(
+               "update addresses set city = ? WHERE city = ?" );
+       sqlupdateSpecificemailAddress = connection.prepareStatement(
+               "update emailAddresses set emailAddress = ? WHERE emailAddress = ?" );
+       sqlupdateSpecificCounty = connection.prepareStatement(
+               "update addresses set county = ? WHERE county = ?" );
+       sqlupdateSpecificPhone = connection.prepareStatement(
+               "update phonenumbers set phoneNumber = ? WHERE phoneNumber = ?" );
+
+       sqlInsertSpecificAddress = connection.prepareStatement("INSERT INTO addresses ( personID, address1) " +
+               "VALUES ( ? , ? )" );
+       sqlInsertSpecificAddress2 = connection.prepareStatement("INSERT INTO addresses ( personID, address2) " +
+               "VALUES ( ? , ? )" );
+       sqlInsertSpecificAddress3 = connection.prepareStatement("INSERT INTO addresses ( personID, address3) " +
+               "VALUES ( ? , ? )" );
+       sqlInsertSpecificCity = connection.prepareStatement("INSERT INTO addresses ( personID, address2) " +
+               "VALUES ( ? , ? )" );
+       sqlInsertSpecificemailAddress = connection.prepareStatement("INSERT INTO addresses ( personID, address2) " +
+               "VALUES ( ? , ? )" );
+       sqlInsertSpecificCounty = connection.prepareStatement("INSERT INTO addresses ( personID, address2) " +
+               "VALUES ( ? , ? )" );
+       sqlInsertPhone = connection.prepareStatement("INSERT INTO addresses ( personID, address2) " +
+               "VALUES ( ? , ? )" );
+
+
+
+       // delete phone number from table phoneNumbers
       sqlDeletePhone = connection.prepareStatement(
          "DELETE FROM phoneNumbers WHERE personID = ?" );
 
@@ -138,13 +232,13 @@ public class CloudscapeDataAccess
       String driver = "com.mysql.jdbc.Driver";
      
       // URL to connect to addressbook database
-      String url = "jdbc:mysql://localhost:3306/addressbook?user=root";
+      String url = "jdbc:mysql://localhost:3306/addressbook?user=root&password=root";
       
       // load database driver class
       Class.forName( driver );
 
       // connect to database
-      connection = DriverManager.getConnection( url ); 
+      connection = DriverManager.getConnection( url);
 
       // Require manual commit for transactions. This enables 
       // the program to rollback transactions that do not 
@@ -178,13 +272,14 @@ public class CloudscapeDataAccess
          person.setAddress2( resultSet.getString( 6 ) );
          person.setCity( resultSet.getString( 7 ) );
          person.setState( resultSet.getString( 8 ) );
+         person.setAddress3(resultSet.getString(9));
          //person.setZipcode( resultSet.getString( 9 ) );
 
-         person.setPhoneID( resultSet.getInt( 9 ) );
-         person.setPhoneNumber( resultSet.getString( 10 ) );
+         person.setPhoneID( resultSet.getInt( 10 ) );
+         person.setPhoneNumber( resultSet.getString( 11 ) );
 
-         person.setEmailID( resultSet.getInt( 11 ) );
-         person.setEmailAddress( resultSet.getString( 12 ) );
+         person.setEmailID( resultSet.getInt( 12 ) );
+         person.setEmailAddress( resultSet.getString( 13 ) );
  
          // return AddressBookEntry
          return person;
@@ -222,8 +317,8 @@ public class CloudscapeDataAccess
          sqlUpdateAddress.setString( 2, person.getAddress2() );
          sqlUpdateAddress.setString( 3, person.getCity() );
          sqlUpdateAddress.setString( 4, person.getState() );
-         //sqlUpdateAddress.setString( 5, person.getZipcode() );
-         sqlUpdateAddress.setInt( 5, person.getAddressID() );
+         sqlUpdateAddress.setString( 5, person.getAddress3() );
+         sqlUpdateAddress.setInt( 6, person.getAddressID() );
          result = sqlUpdateAddress.executeUpdate();
          
          // if update fails, rollback and discontinue 
@@ -276,7 +371,419 @@ public class CloudscapeDataAccess
 
    // Insert new entry. Method returns boolean indicating 
    // success or failure.
-   public boolean newPerson( AddressBookEntry person )
+   public boolean deleteAddress(String address)  {
+       int result;
+       try {
+           sqlDeleteSpecificAddress.setString( 1, address );
+
+           result = sqlDeleteSpecificAddress.executeUpdate();
+       if ( result == 0 ) {
+           connection.rollback(); // rollback delete
+           return false;          // delete unsuccessful
+       }
+       connection.commit();   // commit delete
+
+       } catch (SQLException e) {
+           e.printStackTrace();
+       }
+       return true;
+   }
+
+    public boolean deleteAddress2(String address2)  {
+        int result;
+        try {
+            sqlDeleteSpecificAddress2.setString( 1, address2 );
+
+            result = sqlDeleteSpecificAddress2.executeUpdate();
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean deleteemailAddress(String emailaddress)  {
+        int result;
+        try {
+            sqlDeleteSpecificemailAddress.setString( 1, emailaddress );
+
+            result = sqlDeleteSpecificemailAddress.executeUpdate();
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean city(String city)  {
+        int result;
+        try {
+            sqlDeleteSpecificCity.setString( 1, city );
+
+            result = sqlDeleteSpecificCity.executeUpdate();
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean county(String county)  {
+        int result;
+        try {
+            sqlDeleteSpecificCounty.setString( 1, county );
+
+            result = sqlDeleteSpecificCounty.executeUpdate();
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean deletespecificaddress3(String address3)  {
+        int result;
+        try {
+            sqlDeleteSpecificAddress3.setString( 1, address3 );
+
+            result = sqlDeleteSpecificAddress3.executeUpdate();
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean phone(String phone)  {
+        int result;
+        try {
+            sqlDeleteSpecificPhone.setString( 1, phone );
+
+            result = sqlDeleteSpecificPhone.executeUpdate();
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean UpdateAddress(String address, String updateaddress)
+    {
+        int result;
+        try {
+            sqlupdateSpecificAddress.setString( 1, address );
+            sqlupdateSpecificAddress.setString( 2, updateaddress );
+
+            result = sqlupdateSpecificAddress.executeUpdate();
+
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean UpdateAddress2(String address2, String updateaddress2)
+    {
+        int result;
+        try {
+            sqlupdateSpecificAddress2.setString( 1, address2 );
+            sqlupdateSpecificAddress2.setString( 2, updateaddress2 );
+
+            result = sqlupdateSpecificAddress2.executeUpdate();
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean UpdateemailAddress(String emailaddress, String updateemail)
+    {
+        int result;
+        try {
+            sqlupdateSpecificemailAddress.setString( 1, emailaddress );
+            sqlupdateSpecificemailAddress.setString( 2, updateemail );
+
+            result = sqlupdateSpecificemailAddress.executeUpdate();
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean Updatecity(String city, String updatecity)
+    {
+        int result;
+        try {
+            sqlupdateSpecificCity.setString( 1, city );
+            sqlupdateSpecificCity.setString( 2, updatecity );
+
+
+            result = sqlupdateSpecificCity.executeUpdate();
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean Updatecounty(String county, String updatecounty)
+    {
+        int result;
+        try {
+            sqlupdateSpecificCounty.setString( 1, county );
+            sqlupdateSpecificCounty.setString( 2,updatecounty );
+
+            result = sqlupdateSpecificCounty.executeUpdate();
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean Updatephone(String phone, String updatephone)
+    {
+        int result;
+        try {
+            sqlUpdatePhone.setString( 1, phone );
+            sqlUpdatePhone.setString( 2, updatephone );
+
+            result = sqlupdateSpecificPhone.executeUpdate();
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean Updatespecificaddress3(String address3, String updateaddress3)
+    {
+        int result;
+        try {
+            sqlupdateSpecificAddress3.setString( 1, address3 );
+            sqlupdateSpecificAddress3.setString( 2, updateaddress3 );
+
+            result = sqlupdateSpecificAddress3.executeUpdate();
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+
+    public boolean AddAddress(String address)
+    {
+        int result;
+        try {
+
+            ResultSet resultPersonID = sqlPersonID.executeQuery();
+            int personID =  resultPersonID.getInt( 1 );
+            sqlInsertSpecificAddress.setInt( 1, personID );
+            sqlInsertSpecificAddress.setString( 2, address );
+
+
+            result = sqlInsertSpecificAddress.executeUpdate();
+
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean AddAddress2(String address2)
+    {
+        int result;
+        try {
+            ResultSet resultPersonID = sqlPersonID.executeQuery();
+            int personID =  resultPersonID.getInt( 1 );
+            sqlInsertSpecificAddress2.setInt( 1, personID );
+            sqlInsertSpecificAddress2.setString( 2, address2 );
+
+
+            result = sqlInsertSpecificAddress2.executeUpdate();
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean AddemailAddress(String emailaddress)
+    {
+        int result;
+        try {
+            ResultSet resultPersonID = sqlPersonID.executeQuery();
+           int personID =  resultPersonID.getInt( 1 );
+            sqlInsertSpecificemailAddress.setInt( 1, personID );
+            sqlInsertSpecificemailAddress.setString( 2, emailaddress );
+            result = sqlInsertSpecificemailAddress.executeUpdate();
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean Addcity(String city)
+    {
+        int result;
+        try {
+            ResultSet resultPersonID = sqlPersonID.executeQuery();
+           int personID =  resultPersonID.getInt( 1 );
+            sqlInsertSpecificCity.setInt( 1, personID );
+            sqlInsertSpecificCity.setString( 2, city );
+
+            result = sqlInsertSpecificCity.executeUpdate();
+
+
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean Addcounty(String county)
+    {
+        int result;
+        try {
+            ResultSet resultPersonID = sqlPersonID.executeQuery();
+           int personID =  resultPersonID.getInt( 1 );
+            sqlInsertSpecificCounty.setInt( 1, personID );
+            sqlInsertSpecificCounty.setString( 2, county );
+
+            result = sqlInsertSpecificCounty.executeUpdate();
+
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean Addphone(String phone)
+    {
+        int result;
+        try {
+            ResultSet resultPersonID = sqlPersonID.executeQuery();
+            int personID =  resultPersonID.getInt( 1 );
+            sqlInsertSpecificPhone.setInt( 1, personID );
+            sqlInsertSpecificPhone.setString( 2, phone );
+
+            result = sqlInsertSpecificPhone.executeUpdate();
+
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public boolean Addspecificaddress3(String address3)
+    {
+        int result;
+        try {
+            ResultSet resultPersonID = sqlPersonID.executeQuery();
+            int personID =  resultPersonID.getInt( 1 );
+            sqlInsertSpecificPhone.setInt( 1, personID );
+            sqlupdateSpecificAddress3.setString( 1, address3 );
+
+            result = sqlupdateSpecificAddress3.executeUpdate();
+            if ( result == 0 ) {
+                connection.rollback(); // rollback delete
+                return false;          // delete unsuccessful
+            }
+            connection.commit();   // commit delete
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public boolean newPerson( AddressBookEntry person)
       throws DataAccessException
    {
       // insert person in database
@@ -310,8 +817,8 @@ public class CloudscapeDataAccess
                person.getCity() );
             sqlInsertAddress.setString( 5, 
                person.getState() );
-            //sqlInsertAddress.setString( 6,
-              // person.getZipcode() );
+            sqlInsertAddress.setString( 6,
+                    person.getAddress3() );
             result = sqlInsertAddress.executeUpdate();
          
             // if insert fails, rollback and discontinue 
@@ -369,7 +876,8 @@ public class CloudscapeDataAccess
       
    // Delete an entry. Method returns boolean indicating 
    // success or failure.
-   public boolean deletePerson( AddressBookEntry person )
+
+    public boolean deletePerson( AddressBookEntry person )
       throws DataAccessException
    {
       // delete a person from database

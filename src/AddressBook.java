@@ -9,7 +9,7 @@ import com.alee.laf.WebLookAndFeel;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.*;
+import java.io.IOException;
 
 // Java extension packages
 import javax.swing.*;
@@ -23,11 +23,11 @@ public class AddressBook extends JFrame {
    private JDesktopPane desktop;
    
    // reference to database access object
-   private AddressBookDataAccess database;
+   private  AddressBookDataAccess database;
 
    // references to Actions
    Action newAction, saveAction, deleteAction, 
-      searchAction, exitAction;
+      searchAction, exitAction , deleteSpecific;
    
    // set up database connection and GUI
    public AddressBook() 
@@ -72,9 +72,10 @@ public class AddressBook extends JFrame {
       saveAction = new SaveAction();
       saveAction.setEnabled( false );    // disabled by default
       deleteAction = new DeleteAction();
-      deleteAction.setEnabled( false );  // disabled by default
+       deleteAction.setEnabled( false );  // disabled by default
       searchAction = new SearchAction();
       exitAction = new ExitAction();
+       deleteSpecific = new deleteSpecific();
       
       // add actions to tool bar
       toolBar.add( newAction );
@@ -82,6 +83,7 @@ public class AddressBook extends JFrame {
       toolBar.add( deleteAction );
       toolBar.add( new JToolBar.Separator() );
       toolBar.add( searchAction );
+       toolBar.add(deleteSpecific);
 
       // add actions to File menu
       fileMenu.add( newAction );
@@ -91,6 +93,7 @@ public class AddressBook extends JFrame {
       fileMenu.add( searchAction );
       fileMenu.addSeparator();
       fileMenu.add( exitAction );
+       fileMenu.add(deleteSpecific);
       
       // set up menu bar
       JMenuBar menuBar = new JMenuBar();
@@ -136,8 +139,7 @@ public class AddressBook extends JFrame {
    }
    
    // create a new AddressBookEntryFrame and register listener
-   private AddressBookEntryFrame createAddressBookEntryFrame()
-   {
+   private AddressBookEntryFrame createAddressBookEntryFrame() throws IOException {
       AddressBookEntryFrame frame = new AddressBookEntryFrame();
       setDefaultCloseOperation( DISPOSE_ON_CLOSE );
       frame.addInternalFrameListener( 
@@ -164,6 +166,15 @@ public class AddressBook extends JFrame {
       return frame;  
    }  // end method createAddressBookEntryFrame
 
+    private Delete_Specific createDeleteAddressBookEntryFrame() throws IOException {
+        Delete_Specific Frame = new Delete_Specific(database);
+        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
+
+
+        return Frame;
+    }  // end method createAddressBookEntryFrame
+
+
    // method to launch program execution
    public static void main( String args[] )
    {
@@ -174,7 +185,7 @@ public class AddressBook extends JFrame {
    // user to input new entry. User must "Save" entry
    // after inputting data.
    private class NewAction extends AbstractAction {
-      
+
       // set up action's name, icon, descriptions and mnemonic
       public NewAction()
       {
@@ -182,27 +193,32 @@ public class AddressBook extends JFrame {
          putValue( SMALL_ICON, new ImageIcon(
             getClass().getResource( "images/New24.png" ) ) );
          putValue( SHORT_DESCRIPTION, "New" );
-         putValue( LONG_DESCRIPTION, 
+         putValue( LONG_DESCRIPTION,
             "Add a new address book entry" );
          putValue( MNEMONIC_KEY, new Integer( 'N' ) );
       }
-      
+
       // display window in which user can input entry
       public void actionPerformed( ActionEvent e )
       {
          // create new internal window
-         AddressBookEntryFrame entryFrame = 
-            createAddressBookEntryFrame();
-         
+         AddressBookEntryFrame entryFrame =
+                 null;
+         try {
+            entryFrame = createAddressBookEntryFrame();
+         } catch (IOException e1) {
+            e1.printStackTrace();
+         }
+
          // set new AddressBookEntry in window
-         entryFrame.setAddressBookEntry( 
+         entryFrame.setAddressBookEntry(
             new AddressBookEntry() );
-         
+
          // display window
          desktop.add( entryFrame );
          entryFrame.setVisible( true );
       }
-      
+
    }  // end inner class NewAction
    
    // inner class defines an action that can save new or 
@@ -279,55 +295,82 @@ public class AddressBook extends JFrame {
          putValue( SMALL_ICON, new ImageIcon(
             getClass().getResource( "images/Delete24.png" ) ) );
          putValue( SHORT_DESCRIPTION, "Delete" );
-         putValue( LONG_DESCRIPTION, 
+         putValue( LONG_DESCRIPTION,
             "Delete an address book entry" );
          putValue( MNEMONIC_KEY, new Integer( 'D' ) );
       }
-      
+
       // delete entry
       public void actionPerformed( ActionEvent e )
       {
-         // get currently active window
-         AddressBookEntryFrame currentFrame = 
+
+         AddressBookEntryFrame currentFrame =
             ( AddressBookEntryFrame ) desktop.getSelectedFrame();
-         
+
          // get AddressBookEntry from window
-         AddressBookEntry person = 
-            currentFrame.getAddressBookEntry();
-         
+        AddressBookEntry person =
+           currentFrame.getAddressBookEntry();
+        //
          // If personID is 0, this is new entry that has not
          // been inserted. Therefore, delete is not necessary.
-         // Display message and return.
+          //Display message and return.
          if ( person.getPersonID() == 0 ) {
-            JOptionPane.showMessageDialog( desktop, 
+            JOptionPane.showMessageDialog( desktop,
                "New entries must be saved before they can be " +
-               "deleted. \nTo cancel a new entry, simply " + 
-               "close the window containing the entry" );
-            return;            
-         }
-         
+              "deleted. \nTo cancel a new entry, simply " +
+              "close the window containing the entry" );
+         return;
+        }
+       //
          // delete person
          try {
-            database.deletePerson( person );
-            
+           database.deletePerson( person );
+
             // display message indicating success
             JOptionPane.showMessageDialog( desktop,
-               "Deletion successful" );         
+               "Deletion successful" );
          }
-         
+
          // detect problems deleting person
          catch ( DataAccessException exception ) {
             JOptionPane.showMessageDialog( desktop, exception,
-               "Deletion failed", JOptionPane.ERROR_MESSAGE );   
-            exception.printStackTrace();  
+               "Deletion failed", JOptionPane.ERROR_MESSAGE );
+            exception.printStackTrace();
          }
-         
+
          // close current window and dispose of resources
          currentFrame.dispose();
-         
-      }  // end method actionPerformed 
+
+      }  // end method actionPerformed
       
    }  // end inner class DeleteAction
+
+    private class deleteSpecific extends AbstractAction {
+
+        // set up action's name, icon, descriptions and mnemonic
+        public deleteSpecific() {
+            putValue(NAME, "Delete");
+            putValue(SMALL_ICON, new ImageIcon(
+                    getClass().getResource("images/Delete16.png")));
+            putValue(SHORT_DESCRIPTION, "Delete");
+            putValue(LONG_DESCRIPTION,
+                    "Delete an address book entry");
+            putValue(MNEMONIC_KEY, new Integer('D'));
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            Delete_Specific entryFrame =
+                    null;
+            try {
+                entryFrame = createDeleteAddressBookEntryFrame();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+            desktop.add( entryFrame );
+            entryFrame.setVisible( true );
+        }
+    }
    
    // inner class defines action that locates entry
    private class SearchAction extends AbstractAction {
@@ -364,11 +407,16 @@ public class AddressBook extends JFrame {
                   
                // create window to display AddressBookEntry
                AddressBookEntryFrame entryFrame =
-                  createAddressBookEntryFrame();
-                 
+                       null;
+               try {
+                  entryFrame = createAddressBookEntryFrame();
+               } catch (IOException e1) {
+                  e1.printStackTrace();
+               }
+
                // set AddressBookEntry to display
                entryFrame.setAddressBookEntry( person );
-                  
+
                // display window
                desktop.add( entryFrame );
                entryFrame.setVisible( true );
