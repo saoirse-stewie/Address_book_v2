@@ -36,7 +36,7 @@ public class AddressBookEntryFrame extends JInternalFrame {
    private static final String FIRST_NAME = "First Name", 
       LAST_NAME = "Last Name", ADDRESS1 = "Address 1", 
       ADDRESS2 = "Address 2", CITY = "City", COUNTY = "County",
-      ADDRESS3 = "Address 3 ", PHONE = "Phone", EMAIL = "Email";
+      ADDRESS3 = "Address 3 ", PHONE = "Phone",PHONE2 ="Phone #2", EMAIL = "Email";
   
    // construct GUI
    public AddressBookEntryFrame() throws IOException {
@@ -62,6 +62,7 @@ public class AddressBookEntryFrame extends JInternalFrame {
       createRow( ADDRESS3 );
       //createRow( ZIPCODE );
       createRow( PHONE );
+      createRow( PHONE2 );
       createRow( EMAIL );
       
       Container container = getContentPane();
@@ -147,6 +148,7 @@ public class AddressBookEntryFrame extends JInternalFrame {
           
       JTextField field = new JTextField( 30 );
       rightPanel.add( field );
+
 
       fields.put( name, field );
    }

@@ -93,11 +93,15 @@
       <column id="26" parent="5" name="phoneNumber">
         <data-type>varchar(20)</data-type>
       </column>
-      <key id="27" parent="5" name="PRIMARY">
+      <column id="27" parent="5" name="phoneNumber2">
+        <mandatory>1</mandatory>
+        <data-type>varchar(30)</data-type>
+      </column>
+      <key id="28" parent="5" name="PRIMARY">
         <columns>phoneID</columns>
         <primary>1</primary>
       </key>
-      <foreign-key id="28" parent="5" name="fk_phoneNumbers">
+      <foreign-key id="29" parent="5" name="fk_phoneNumbers">
         <columns>personID</columns>
         <ref-key>names.PRIMARY</ref-key>
         <cascade-update-rule>restrict</cascade-update-rule>

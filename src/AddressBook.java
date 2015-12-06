@@ -10,6 +10,8 @@ import com.alee.laf.WebLookAndFeel;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.*;
+import java.util.List;
 
 // Java extension packages
 import javax.swing.*;
@@ -178,7 +180,13 @@ public class AddressBook extends JFrame {
    // method to launch program execution
    public static void main( String args[] )
    {
-      new AddressBook();
+       SwingUtilities.invokeLater(new Runnable() {
+           @Override
+           public void run() {
+               new AddressBook();
+           }
+       });
+
    }
    
    // Private inner class defines action that enables 
@@ -349,9 +357,9 @@ public class AddressBook extends JFrame {
 
         // set up action's name, icon, descriptions and mnemonic
         public deleteSpecific() {
-            putValue(NAME, "Delete");
-            putValue(SMALL_ICON, new ImageIcon(
-                    getClass().getResource("images/Delete16.png")));
+            putValue(NAME, "Delete/Update");
+            //putValue(SMALL_ICON, new ImageIcon(
+                   // getClass().getResource("images/Delete16.png")));
             putValue(SHORT_DESCRIPTION, "Delete");
             putValue(LONG_DESCRIPTION,
                     "Delete an address book entry");
@@ -390,6 +398,9 @@ public class AddressBook extends JFrame {
       // locate existing entry
       public void actionPerformed( ActionEvent e )
       {
+
+         List<AddressBookEntry> people;
+
          String lastName = 
             JOptionPane.showInputDialog( desktop,
                "Enter last name" );
@@ -397,29 +408,42 @@ public class AddressBook extends JFrame {
          // if last name was input, search for it; otherwise,
          // do nothing
          if ( lastName != null ) {
+
+
                
             // Execute search. If found, AddressBookEntry
             // is returned containing data.
-            AddressBookEntry person = database.findPerson( 
-               lastName );
+            people = database.findPerson(lastName );
 
-            if ( person != null ) {
-                  
-               // create window to display AddressBookEntry
-               AddressBookEntryFrame entryFrame =
-                       null;
-               try {
-                  entryFrame = createAddressBookEntryFrame();
-               } catch (IOException e1) {
-                  e1.printStackTrace();
+            int count = people.size();
+            // create window to display AddressBookEntry
+            AddressBookEntryFrame[] Frame = new AddressBookEntryFrame[count];
+
+            int i =0;
+            if ( people != null ) {
+
+               for (AddressBookEntry frame : people) {
+                  try {
+                     Frame[i] = createAddressBookEntryFrame();
+
+
+                     // set AddressBookEntry to display
+                    Frame[i].setAddressBookEntry(frame);
+
+                     desktop.add(Frame[i]);
+
+                     Frame[i].setVisible(true);
+                     i++;
+
+                     // display window
+                     //desktop.add(entryFrame[i]);
+
+                  } catch (IOException e1) {
+                     e1.printStackTrace();
+                  }
+
+
                }
-
-               // set AddressBookEntry to display
-               entryFrame.setAddressBookEntry( person );
-
-               // display window
-               desktop.add( entryFrame );
-               entryFrame.setVisible( true );
             }
             else
                JOptionPane.showMessageDialog( desktop, 

@@ -43,7 +43,10 @@ public class Delete_Specific extends JInternalFrame {
             UPDATEA1 = "Update address1", UPDATEA2 = "Update address2",UPDATEA3 = "Update address3",UPDATEE1 = "Update email",
             UPDATEP1 = "Update phone",UPDATEC1 = "Update city",UPDATECO1 = "Update County",
             ADDRESS2 = "Address 2", CITY = "City", COUNTY = "County",
-            ADDRESS3 = "Address 3 ", PHONE = "Phone", EMAIL = "Email";
+            ADDRESS3 = "Address 3 ", PHONE = "Phone", EMAIL = "Email",
+            ADDRESS1ID ="addressID" ,ADDRESS2ID = "Address2ID", ADDRESS3ID ="Address3ID",
+            EMAILADDRESSID="emailAdressID", CITYID = "cityID", COUNTYID = "CountyID",
+            PHONEID= "PhoneID";
 
     // construct GUI
     public Delete_Specific(AddressBookDataAccess database) throws IOException {
@@ -68,38 +71,44 @@ public class Delete_Specific extends JInternalFrame {
         Updatecity  = new JButton("Update");
         Updatecounty  = new JButton("Update");
 
-        AddAddress = new JButton("+");
-        AddAddress2 = new JButton("+");
-        Addemailaddress  = new JButton("+");
-        AddAddress3  = new JButton("+");
-        AddPhone  = new JButton("+");
-        Addcounty  = new JButton("+");
-        Addcity  = new JButton("+");
-
+        //AddAddress = new JButton("+");
+      //  AddAddress2 = new JButton("+");
+      //  Addemailaddress  = new JButton("+");
+      //  AddAddress3  = new JButton("+");
+      //  AddPhone  = new JButton("+");
+      //  Addcounty  = new JButton("+");
+      //  Addcity  = new JButton("+");
 
         fields = new HashMap();
 
         leftPanel = new JPanel();
-        leftPanel.setLayout( new GridLayout( 8, 2, 0, 2 ) );
+        leftPanel.setLayout( new GridLayout( 8, 2, 0, 1 ) );
         rightPanel = new JPanel();
-        rightPanel.setLayout( new GridLayout( 8, 2, 0, 2 ) );
+        rightPanel.setLayout( new GridLayout( 8, 3, 0, 1 ) );
         deletePanel = new JPanel();
-        deletePanel.setLayout( new GridLayout (8, 2, 0, 2) );
+        deletePanel.setLayout( new GridLayout (8, 2, 0, 1) );
 
         createRow( ADDRESS1 );
         createRow(UPDATEA1);
+        createRow(ADDRESS1ID);
         createRow( ADDRESS2 );
         createRow(UPDATEA2);
+        createRow(ADDRESS2ID);
         createRow( CITY );
         createRow(UPDATEC1);
+        createRow(CITYID);
         createRow( COUNTY );
         createRow(UPDATECO1);
+        createRow(COUNTYID);
         createRow( ADDRESS3 );
         createRow(UPDATEA3);
+        createRow(ADDRESS3ID);
         createRow( PHONE );
         createRow(UPDATEP1);
+        createRow(PHONEID);
         createRow( EMAIL );
         createRow(UPDATEE1);
+        createRow(EMAILADDRESSID);
 
         Container container = getContentPane();
         container.add( leftPanel, BorderLayout.WEST );
@@ -134,7 +143,7 @@ public class Delete_Specific extends JInternalFrame {
         deletePanel.add(Updatecounty);
         deletePanel.add(Addcounty);
 
-        setBounds( xOffset, yOffset, 600, 500 );
+        setBounds( xOffset, yOffset, 800, 300 );
         xOffset = ( xOffset + 30 ) % 300;
         yOffset = ( yOffset + 30 ) % 300;
 
@@ -143,15 +152,19 @@ public class Delete_Specific extends JInternalFrame {
             public void actionPerformed(ActionEvent e) {
 
                 String address = getField(ADDRESS1);
+                String ID = getField(ADDRESS1ID);
+
+
                 if (address!= null )
-                Delete_Specific.this.database.deleteAddress(address);
+                Delete_Specific.this.database.deleteAddress(address,ID);
 }});
         deleteaddress2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String address = getField(ADDRESS2);
+                String ID = getField(ADDRESS2ID);
                 if (address!= null )
-                    Delete_Specific.this.database.deleteAddress2(address);
+                    Delete_Specific.this.database.deleteAddress2(address,ID);
 //
             }
         });
@@ -159,8 +172,9 @@ public class Delete_Specific extends JInternalFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String address = getField(EMAIL);
+                String ID = getField(EMAILADDRESSID);
                 if (address!= null )
-                    Delete_Specific.this.database.deleteemailAddress(address);
+                    Delete_Specific.this.database.deleteemailAddress(address,ID);
 //
             }
         });
@@ -168,8 +182,9 @@ public class Delete_Specific extends JInternalFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String address = getField(ADDRESS3);
+                String ID = getField(EMAILADDRESSID);
                 if (address!= null )
-                    Delete_Specific.this.database.deletespecificaddress3(address);
+                    Delete_Specific.this.database.deletespecificaddress3(address,ID);
 //
             }
         });
@@ -177,24 +192,27 @@ public class Delete_Specific extends JInternalFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String address = getField(PHONE);
+                String ID = getField(PHONEID);
                 if (address!= null )
-                    Delete_Specific.this.database.phone(address);
+                    Delete_Specific.this.database.phone(address,ID);
 }
         });
         county.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String address = getField(COUNTY);
+                String ID = getField(COUNTYID);
                 if (address!= null )
-                    Delete_Specific.this.database.county(address);
+                    Delete_Specific.this.database.county(address,ID);
             }
         });
         city.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String address = getField(CITY);
+                String ID = getField(CITYID);
                 if (address!= null )
-                    Delete_Specific.this.database.city(address);
+                    Delete_Specific.this.database.city(address,ID);
             }
         });
 
@@ -203,16 +221,20 @@ public class Delete_Specific extends JInternalFrame {
             public void actionPerformed(ActionEvent e) {
                 String updateaddress = getField(UPDATEA1);
                 String address = getField(ADDRESS1);
+                String ID = getField(ADDRESS1ID);
+
                 if (address!= null )
-                    Delete_Specific.this.database.UpdateAddress(address,updateaddress);
+                    Delete_Specific.this.database.UpdateAddress(address,updateaddress,ID);
             }});
         Updateaddress2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String updateaddress2 = getField(UPDATEA2);
                 String address = getField(ADDRESS2);
+                String ID = getField(ADDRESS2ID);
+
                 if (address!= null )
-                    Delete_Specific.this.database.UpdateAddress2(address,updateaddress2);
+                    Delete_Specific.this.database.UpdateAddress2(address,updateaddress2,ID);
 }
         });
         Updateemailaddress.addActionListener(new ActionListener() {
@@ -220,8 +242,9 @@ public class Delete_Specific extends JInternalFrame {
             public void actionPerformed(ActionEvent e) {
                 String address = getField(EMAIL);
                 String email = getField(UPDATEE1);
+                String ID = getField(EMAILADDRESSID);
                 if (address!= null )
-                    Delete_Specific.this.database.UpdateemailAddress(address,email);
+                    Delete_Specific.this.database.UpdateemailAddress(address,email,ID);
 //
             }
         });
@@ -230,8 +253,9 @@ public class Delete_Specific extends JInternalFrame {
             public void actionPerformed(ActionEvent e) {
                 String address = getField(ADDRESS3);
                 String address3 = getField(UPDATEA3);
+                String ID = getField(ADDRESS3ID);
                 if (address!= null )
-                    Delete_Specific.this.database.Updatespecificaddress3(address,address3);
+                    Delete_Specific.this.database.Updatespecificaddress3(address,address3,ID);
 //
             }
         });
@@ -240,8 +264,9 @@ public class Delete_Specific extends JInternalFrame {
             public void actionPerformed(ActionEvent e) {
                 String address = getField(PHONE);
                 String phone = getField(UPDATEP1);
+                String ID = getField(PHONEID);
                 if (address!= null )
-                    Delete_Specific.this.database.Updatephone(address,phone);
+                    Delete_Specific.this.database.Updatephone(address,phone,ID);
             }
         });
         Updatecounty.addActionListener(new ActionListener() {
@@ -249,8 +274,9 @@ public class Delete_Specific extends JInternalFrame {
             public void actionPerformed(ActionEvent e) {
                 String address = getField(COUNTY);
                 String county = getField(UPDATECO1);
+                String ID = getField(COUNTYID);
                 if (address!= null )
-                    Delete_Specific.this.database.Updatecounty(address,county);
+                    Delete_Specific.this.database.Updatecounty(address,county,ID);
             }
         });
         Updatecity.addActionListener(new ActionListener() {
@@ -258,8 +284,9 @@ public class Delete_Specific extends JInternalFrame {
             public void actionPerformed(ActionEvent e) {
                 String address = getField(CITY);
                 String city = getField(UPDATEC1);
+                String ID = getField(CITYID);
                 if (address!= null )
-                    Delete_Specific.this.database.Updatecity(address,city);
+                    Delete_Specific.this.database.Updatecity(address,city,ID);
             }
         });
 
@@ -384,11 +411,11 @@ public class Delete_Specific extends JInternalFrame {
     {
         JButton deletename = new JButton();
         JLabel label = new JLabel( name, SwingConstants.RIGHT );
-        label.setBorder(
+       label.setBorder(
                 BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-        leftPanel.add( label );
-
-        JTextField field = new JTextField( 30 );
+       // leftPanel.add( label );
+        JTextField field = new JTextField( 20 );
+        rightPanel.add(label);
         rightPanel.add( field );
 
         fields.put( name, field );

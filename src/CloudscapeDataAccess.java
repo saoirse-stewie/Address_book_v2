@@ -4,6 +4,8 @@
 
 // Java core packages
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CloudscapeDataAccess implements AddressBookDataAccess {
       
@@ -151,64 +153,34 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
          "DELETE FROM addresses WHERE personID = ?" );
 
        sqlDeleteSpecificAddress =connection.prepareStatement(
-               "update addresses set address1 = null WHERE address1 = ?" );
+               "update addresses set address1 = null WHERE address1 = ? AND addressID =?" );
        sqlDeleteSpecificAddress2 =connection.prepareStatement(
-               "update addresses set address2 = null WHERE address2 = ?" );
+               "update addresses set address2 = null WHERE address2 = ? AND addressID =?" );
        sqlDeleteSpecificAddress3 =connection.prepareStatement(
-               "update addresses set address3 = null WHERE address3 = ?" );
+               "update addresses set address3 = null WHERE address3 = ? AND addressID =?" );
        sqlDeleteSpecificCity =connection.prepareStatement(
-               "update addresses set city = null WHERE city = ?" );
+               "update addresses set city = null WHERE city = ? and personID = ?" );
        sqlDeleteSpecificemailAddress = connection.prepareStatement(
-               "update emailAddresses set emailAddress = null WHERE emailAddress = ?" );
+               "update emailAddresses set emailAddress = null WHERE emailAddress = ? AND addressID =? " );
        sqlDeleteSpecificCounty = connection.prepareStatement(
-               "update addresses set county = null WHERE county = ?" );
+               "update addresses set county = null WHERE county = ? AND addressID =?" );
        sqlDeleteSpecificPhone = connection.prepareStatement(
-               "update phonenumbers set phoneNumber = null WHERE phoneNumber = ?" );
+               "update phonenumbers set phoneNumber = null WHERE phoneNumber = ? AND phoneID =?" );
 
        sqlupdateSpecificAddress =connection.prepareStatement(
-               "update addresses set address1 = ? WHERE address1 = ?" );
+               "update addresses set address1 = ? WHERE address1 = ? AND addressID = ?" );
        sqlupdateSpecificAddress2 =connection.prepareStatement(
-               "update addresses set address2 = ? WHERE address2 = ?" );
+               "update addresses set address2 = ? WHERE address2 = ? AND addressID = ?" );
        sqlupdateSpecificAddress3 =connection.prepareStatement(
-               "update addresses set address3 = ? WHERE address3 = ?" );
+               "update addresses set address3 = ? WHERE address3 = ? AND addressID = ?" );
        sqlupdateSpecificCity =connection.prepareStatement(
-               "update addresses set city = ? WHERE city = ?" );
+               "update addresses set city = ? WHERE city = ? AND addressID = ?" );
        sqlupdateSpecificemailAddress = connection.prepareStatement(
-               "update emailAddresses set emailAddress = ? WHERE emailAddress = ?" );
+               "update emailAddresses set emailAddress = ? WHERE emailAddress = ? AND addressID = ?" );
        sqlupdateSpecificCounty = connection.prepareStatement(
-               "update addresses set county = ? WHERE county = ?" );
+               "update addresses set county = ? WHERE county = ? AND addressID = ?" );
        sqlupdateSpecificPhone = connection.prepareStatement(
-               "update phonenumbers set phoneNumber = ? WHERE phoneNumber = ?" );
-
-       sqlupdateSpecificAddress =connection.prepareStatement(
-               "update addresses set address1 = ? WHERE address1 = ?" );
-       sqlupdateSpecificAddress2 =connection.prepareStatement(
-               "update addresses set address2 = ? WHERE address2 = ?" );
-       sqlupdateSpecificAddress3 =connection.prepareStatement(
-               "update addresses set address3 = ? WHERE address3 = ?" );
-       sqlupdateSpecificCity =connection.prepareStatement(
-               "update addresses set city = ? WHERE city = ?" );
-       sqlupdateSpecificemailAddress = connection.prepareStatement(
-               "update emailAddresses set emailAddress = ? WHERE emailAddress = ?" );
-       sqlupdateSpecificCounty = connection.prepareStatement(
-               "update addresses set county = ? WHERE county = ?" );
-       sqlupdateSpecificPhone = connection.prepareStatement(
-               "update phonenumbers set phoneNumber = ? WHERE phoneNumber = ?" );
-
-       sqlInsertSpecificAddress = connection.prepareStatement("INSERT INTO addresses ( personID, address1) " +
-               "VALUES ( ? , ? )" );
-       sqlInsertSpecificAddress2 = connection.prepareStatement("INSERT INTO addresses ( personID, address2) " +
-               "VALUES ( ? , ? )" );
-       sqlInsertSpecificAddress3 = connection.prepareStatement("INSERT INTO addresses ( personID, address3) " +
-               "VALUES ( ? , ? )" );
-       sqlInsertSpecificCity = connection.prepareStatement("INSERT INTO addresses ( personID, address2) " +
-               "VALUES ( ? , ? )" );
-       sqlInsertSpecificemailAddress = connection.prepareStatement("INSERT INTO addresses ( personID, address2) " +
-               "VALUES ( ? , ? )" );
-       sqlInsertSpecificCounty = connection.prepareStatement("INSERT INTO addresses ( personID, address2) " +
-               "VALUES ( ? , ? )" );
-       sqlInsertPhone = connection.prepareStatement("INSERT INTO addresses ( personID, address2) " +
-               "VALUES ( ? , ? )" );
+               "update phonenumbers set phoneNumber = ? WHERE phoneNumber = ? AND phoneID = ?" );
 
 
 
@@ -248,43 +220,48 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
    
    // Locate specified person. Method returns AddressBookEntry
    // containing information.
-   public AddressBookEntry findPerson( String lastName )
+   public List<AddressBookEntry> findPerson(String lastName )
    {
+       List<AddressBookEntry> find= new ArrayList();
       try {
+
+
          // set query parameter and execute query
          sqlFind.setString( 1, lastName );
          ResultSet resultSet = sqlFind.executeQuery();
 
          // if no records found, return immediately
-         if ( !resultSet.next() ) 
-            return null;
+         while ( resultSet.next() ) {
 
-         // create new AddressBookEntry
-         AddressBookEntry person = new AddressBookEntry( 
-            resultSet.getInt( 1 ) );
-         
-         // set AddressBookEntry properties
-         person.setFirstName( resultSet.getString( 2 ) );
-         person.setLastName( resultSet.getString( 3 ) );
+             // create new AddressBookEntry
+             AddressBookEntry person = new AddressBookEntry(
+                     resultSet.getInt(1));
 
-         person.setAddressID( resultSet.getInt( 4 ) );
-         person.setAddress1( resultSet.getString( 5 ) );
-         person.setAddress2( resultSet.getString( 6 ) );
-         person.setCity( resultSet.getString( 7 ) );
-         person.setState( resultSet.getString( 8 ) );
-         person.setAddress3(resultSet.getString(9));
-         //person.setZipcode( resultSet.getString( 9 ) );
+             // set AddressBookEntry properties
+             person.setFirstName(resultSet.getString(2));
+             person.setLastName(resultSet.getString(3));
 
-         person.setPhoneID( resultSet.getInt( 10 ) );
-         person.setPhoneNumber( resultSet.getString( 11 ) );
+             person.setAddressID(resultSet.getInt(4));
+             person.setAddress1(resultSet.getString(5));
+             person.setAddress2(resultSet.getString(6));
+             person.setCity(resultSet.getString(7));
+             person.setState(resultSet.getString(8));
+             person.setAddress3(resultSet.getString(9));
+             //person.setZipcode( resultSet.getString( 9 ) );
 
-         person.setEmailID( resultSet.getInt( 12 ) );
-         person.setEmailAddress( resultSet.getString( 13 ) );
- 
+             person.setPhoneID(resultSet.getInt(10));
+             person.setPhoneNumber(resultSet.getString(11));
+
+             person.setEmailID(resultSet.getInt(12));
+             person.setEmailAddress(resultSet.getString(13));
+
+
+             find.add(person);
+         }
          // return AddressBookEntry
-         return person;
+         return find;
       }
-         
+
       // catch SQLException
       catch ( SQLException sqlException ) {
          return null;
@@ -371,10 +348,13 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
 
    // Insert new entry. Method returns boolean indicating 
    // success or failure.
-   public boolean deleteAddress(String address)  {
+   public boolean deleteAddress(String address,String addressID)  {
        int result;
        try {
            sqlDeleteSpecificAddress.setString( 1, address );
+           sqlDeleteSpecificAddress.setString( 2, addressID );
+
+
 
            result = sqlDeleteSpecificAddress.executeUpdate();
        if ( result == 0 ) {
@@ -389,10 +369,12 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
        return true;
    }
 
-    public boolean deleteAddress2(String address2)  {
+    public boolean deleteAddress2(String address2,String addressID)  {
         int result;
         try {
             sqlDeleteSpecificAddress2.setString( 1, address2 );
+            sqlDeleteSpecificAddress2.setString( 2, addressID );
+
 
             result = sqlDeleteSpecificAddress2.executeUpdate();
             if ( result == 0 ) {
@@ -406,10 +388,12 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
         }
         return true;
     }
-    public boolean deleteemailAddress(String emailaddress)  {
+    public boolean deleteemailAddress(String emailaddress,String addressID)  {
         int result;
         try {
             sqlDeleteSpecificemailAddress.setString( 1, emailaddress );
+            sqlDeleteSpecificemailAddress.setString( 2, addressID );
+
 
             result = sqlDeleteSpecificemailAddress.executeUpdate();
             if ( result == 0 ) {
@@ -423,10 +407,12 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
         }
         return true;
     }
-    public boolean city(String city)  {
+    public boolean city(String city, String addressID)  {
         int result;
         try {
             sqlDeleteSpecificCity.setString( 1, city );
+            sqlDeleteSpecificCity.setString( 2, addressID );
+
 
             result = sqlDeleteSpecificCity.executeUpdate();
             if ( result == 0 ) {
@@ -440,10 +426,12 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
         }
         return true;
     }
-    public boolean county(String county)  {
+    public boolean county(String county,String addressID)  {
         int result;
         try {
             sqlDeleteSpecificCounty.setString( 1, county );
+            sqlDeleteSpecificCounty.setString( 2, addressID );
+
 
             result = sqlDeleteSpecificCounty.executeUpdate();
             if ( result == 0 ) {
@@ -457,10 +445,11 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
         }
         return true;
     }
-    public boolean deletespecificaddress3(String address3)  {
+    public boolean deletespecificaddress3(String address3,String addressID)  {
         int result;
         try {
             sqlDeleteSpecificAddress3.setString( 1, address3 );
+            sqlDeleteSpecificAddress3.setString( 2, addressID );
 
             result = sqlDeleteSpecificAddress3.executeUpdate();
             if ( result == 0 ) {
@@ -474,10 +463,12 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
         }
         return true;
     }
-    public boolean phone(String phone)  {
+    public boolean phone(String phone,String addressID)  {
         int result;
         try {
             sqlDeleteSpecificPhone.setString( 1, phone );
+            sqlDeleteSpecificPhone.setString( 2, addressID );
+
 
             result = sqlDeleteSpecificPhone.executeUpdate();
             if ( result == 0 ) {
@@ -491,12 +482,13 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
         }
         return true;
     }
-    public boolean UpdateAddress(String address, String updateaddress)
+    public boolean UpdateAddress(String address, String updateaddress,String addressID)
     {
         int result;
         try {
             sqlupdateSpecificAddress.setString( 1, address );
             sqlupdateSpecificAddress.setString( 2, updateaddress );
+            sqlupdateSpecificAddress.setString( 3, addressID );
 
             result = sqlupdateSpecificAddress.executeUpdate();
 
@@ -511,12 +503,13 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
         }
         return true;
     }
-    public boolean UpdateAddress2(String address2, String updateaddress2)
+    public boolean UpdateAddress2(String address2, String updateaddress2,String addressID)
     {
         int result;
         try {
             sqlupdateSpecificAddress2.setString( 1, address2 );
             sqlupdateSpecificAddress2.setString( 2, updateaddress2 );
+            sqlupdateSpecificAddress2.setString( 3, addressID );
 
             result = sqlupdateSpecificAddress2.executeUpdate();
             if ( result == 0 ) {
@@ -530,12 +523,13 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
         }
         return true;
     }
-    public boolean UpdateemailAddress(String emailaddress, String updateemail)
+    public boolean UpdateemailAddress(String emailaddress, String updateemail,String addressID)
     {
         int result;
         try {
             sqlupdateSpecificemailAddress.setString( 1, emailaddress );
             sqlupdateSpecificemailAddress.setString( 2, updateemail );
+            sqlupdateSpecificemailAddress.setString( 3, addressID );
 
             result = sqlupdateSpecificemailAddress.executeUpdate();
             if ( result == 0 ) {
@@ -549,12 +543,13 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
         }
         return true;
     }
-    public boolean Updatecity(String city, String updatecity)
+    public boolean Updatecity(String city, String updatecity,String addressID)
     {
         int result;
         try {
             sqlupdateSpecificCity.setString( 1, city );
             sqlupdateSpecificCity.setString( 2, updatecity );
+            sqlupdateSpecificCity.setString( 3, addressID );
 
 
             result = sqlupdateSpecificCity.executeUpdate();
@@ -569,12 +564,13 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
         }
         return true;
     }
-    public boolean Updatecounty(String county, String updatecounty)
+    public boolean Updatecounty(String county, String updatecounty, String addressID)
     {
         int result;
         try {
             sqlupdateSpecificCounty.setString( 1, county );
             sqlupdateSpecificCounty.setString( 2,updatecounty );
+            sqlupdateSpecificCounty.setString( 3, addressID );
 
             result = sqlupdateSpecificCounty.executeUpdate();
             if ( result == 0 ) {
@@ -588,7 +584,7 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
         }
         return true;
     }
-    public boolean Updatephone(String phone, String updatephone)
+    public boolean Updatephone(String phone, String updatephone,String addressID)
     {
         int result;
         try {
@@ -607,12 +603,13 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
         }
         return true;
     }
-    public boolean Updatespecificaddress3(String address3, String updateaddress3)
+    public boolean Updatespecificaddress3(String address3, String updateaddress3,String addressID)
     {
         int result;
         try {
             sqlupdateSpecificAddress3.setString( 1, address3 );
             sqlupdateSpecificAddress3.setString( 2, updateaddress3 );
+            sqlupdateSpecificAddress.setString( 3, addressID );
 
             result = sqlupdateSpecificAddress3.executeUpdate();
             if ( result == 0 ) {

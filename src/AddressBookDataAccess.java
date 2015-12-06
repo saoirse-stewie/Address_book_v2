@@ -4,31 +4,32 @@
 
 // Java core packages
 import java.sql.*;
+import java.util.List;
 
 public interface AddressBookDataAccess {
       
    // Locate specified person by last name. Return 
    // AddressBookEntry containing information.
-   public AddressBookEntry findPerson( String lastName );
+   public List<AddressBookEntry> findPerson(String lastName );
    
    // Update information for specified person.
    // Return boolean indicating success or failure.
 
-   public boolean deleteAddress(String address);
-   public boolean deleteAddress2(String address2);
-   public boolean deleteemailAddress(String emailaddress2);
-   public boolean city(String city);
-   public boolean county(String county);
-   public boolean phone(String phone);
-   public boolean deletespecificaddress3(String address3);
+   public boolean deleteAddress(String address,String addressID);
+   public boolean deleteAddress2(String address2,String addressID);
+   public boolean deleteemailAddress(String emailaddress2,String addressID);
+   public boolean city(String city,String addressID);
+   public boolean county(String county,String addressID);
+   public boolean phone(String phone,String addressID);
+   public boolean deletespecificaddress3(String address3,String addressID);
 
-   public boolean UpdateAddress(String address,String updateaddress);
-   public boolean UpdateAddress2(String address2,String updateaddress2);
-   public boolean UpdateemailAddress(String address2, String updateemail);
-   public boolean Updatecity(String city, String updatecity);
-   public boolean Updatecounty(String county, String updatecounty);
-   public boolean Updatephone(String phone,String updatephone);
-   public boolean Updatespecificaddress3(String address3,String updateaddress3);
+   public boolean UpdateAddress(String address,String updateaddress,String addressID);
+   public boolean UpdateAddress2(String address2,String updateaddress2,String addressID);
+   public boolean UpdateemailAddress(String address2, String updateemail,String addressID);
+   public boolean Updatecity(String city, String updatecity,String addressID);
+   public boolean Updatecounty(String county, String updatecounty,String addressID);
+   public boolean Updatephone(String phone,String updatephone,String addressID);
+   public boolean Updatespecificaddress3(String address3,String updateaddress3,String addressID);
 
    public boolean AddAddress(String address);
    public boolean AddAddress2(String address2);
