@@ -71,13 +71,6 @@ public class Delete_Specific extends JInternalFrame {
         Updatecity  = new JButton("Update");
         Updatecounty  = new JButton("Update");
 
-        //AddAddress = new JButton("+");
-      //  AddAddress2 = new JButton("+");
-      //  Addemailaddress  = new JButton("+");
-      //  AddAddress3  = new JButton("+");
-      //  AddPhone  = new JButton("+");
-      //  Addcounty  = new JButton("+");
-      //  Addcity  = new JButton("+");
 
         fields = new HashMap();
 
@@ -117,31 +110,30 @@ public class Delete_Specific extends JInternalFrame {
 
         deletePanel.add(deleteaddress);
         deletePanel.add(Updateddress);
-        deletePanel.add(AddAddress);
+
 
         deletePanel.add(deleteaddress2);
         deletePanel.add(Updateaddress2);
-        deletePanel.add(AddAddress2);
+
 
         deletePanel.add(deleteemailaddress);
         deletePanel.add(Updateemailaddress);
-        deletePanel.add(Addemailaddress);
+
 
         deletePanel.add(deleteaddress3);
         deletePanel.add(Updateaddress3);
-        deletePanel.add(AddAddress3);
+
 
         deletePanel.add(city);
         deletePanel.add(Updatecity);
-        deletePanel.add(Addcity);
 
         deletePanel.add(deletePhone);
         deletePanel.add(UpdatePhone);
-        deletePanel.add(AddPhone);
+
 
         deletePanel.add(county);
         deletePanel.add(Updatecounty);
-        deletePanel.add(Addcounty);
+
 
         setBounds( xOffset, yOffset, 800, 300 );
         xOffset = ( xOffset + 30 ) % 300;
@@ -290,68 +282,7 @@ public class Delete_Specific extends JInternalFrame {
             }
         });
 
-        AddAddress.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int id=0;
-                String address = getField(ADDRESS1);
 
-                if (address!= null )
-                    Delete_Specific.this.database.AddAddress(address);
-            }});
-        AddAddress2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String address = getField(ADDRESS2);
-                if (address!= null )
-                    Delete_Specific.this.database.AddAddress2(address);
-            }
-        });
-        Addemailaddress.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String address = getField(EMAIL);
-
-                if (address!= null )
-                    Delete_Specific.this.database.AddemailAddress(address);
-//
-            }
-        });
-        AddAddress3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String address = getField(ADDRESS3);
-
-                if (address!= null )
-                    Delete_Specific.this.database.Addspecificaddress3(address);
-//
-            }
-        });
-        AddPhone.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String address = getField(PHONE);
-                if (address!= null )
-                    Delete_Specific.this.database.Addphone(address);
-            }
-        });
-        Addcounty.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String address = getField(COUNTY);
-
-                if (address!= null )
-                    Delete_Specific.this.database.Addcounty(address);
-            }
-        });
-        Addcity.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String address = getField(CITY);
-                if (address!= null )
-                    Delete_Specific.this.database.Addcity(address);
-            }
-        });
 
 
 

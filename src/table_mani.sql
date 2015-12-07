@@ -7,4 +7,4 @@ use addressbook;
 /*ALTER TABLE addresses
 DROP COLUMN zipcode;*/
 
-ALTER TABLE phonenumbers ADD COLUMN  phoneNumber2 VARCHAR(30) NOT NULL;
+ALTER TABLE emailaddresses ADD COLUMN  emailAddress2 VARCHAR(30) NOT NULL;

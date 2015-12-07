@@ -11,7 +11,9 @@ public class AddressBookEntry {
    private String address3 = "";
    private String zipcode = "";
    private String phoneNumber = "";
+   private String phoneNumber2= "";
    private String emailAddress = "";
+   private String emailAddress2 = "";
    private int personID;
    private int addressID;
    private int phoneID;
@@ -118,19 +120,39 @@ public class AddressBookEntry {
    {
       phoneNumber = number;
    }
-   
-   // get person's phone number 
+
+   // get person's phone number
    public String getPhoneNumber()
    {
       return phoneNumber;
    }
+   public void setPhoneNumber2( String number )
+   {
+      phoneNumber2 = number;
+   }
+
+   // get person's phone number
+   public String getPhoneNumber2()
+   {
+      return phoneNumber2;
+   }
 
    // set person's email address
+   public void setEmailAddress2( String email )
+   {
+      emailAddress2 = email;
+   }
+
+   // get person's email address
+   public String getEmailAddress2()
+   {
+      return emailAddress2;
+   }
    public void setEmailAddress( String email )
    {
       emailAddress = email;
    }
-   
+
    // get person's email address
    public String getEmailAddress()
    {
